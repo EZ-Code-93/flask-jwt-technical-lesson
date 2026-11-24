@@ -10,14 +10,25 @@ function App() {
 
   useEffect(() => {
     // auto-login
-    fetch("/check_session").then((r) => {
+    // fetch("/check_session").then((r) => {
+    fetch("/me", {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    }).then((r) => {
       if (r.ok) {
         r.json().then((user) => setUser(user));
       }
     });
   }, []);
+  // pass onLogin to Login component
+  const onLogin = (token, user) => {
+    localStorage.setItem("token", token);
+    setUser(user);
+  };
 
-  if (!user) return <Login onLogin={setUser} />;
+  // if (!user) return <Login onLogin={setUser} />;
+  if (!user) return <Login onLogin={onLogin} />;
 
   return (
     <>
